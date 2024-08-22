@@ -118,7 +118,8 @@ public class JSONSchema: Codable, Equatable {
    public let additionalProperties: Bool
    public let `enum`: [String]?
    public var ref: String?
-   
+   public var anyOf: [JSONSchema]?
+
    public init(
       type: JSONSchemaType? = nil,
       description: String? = nil,
@@ -127,7 +128,8 @@ public class JSONSchema: Codable, Equatable {
       required: [String]? = nil,
       additionalProperties: Bool = false,
       enum: [String]? = nil,
-      ref: String? = nil
+      ref: String? = nil,
+      anyOf: [JSONSchema]? = nil
    ) {
       self.type = type
       self.description = description
@@ -137,6 +139,7 @@ public class JSONSchema: Codable, Equatable {
       self.additionalProperties = additionalProperties
       self.enum = `enum`
       self.ref = ref
+      self.anyOf = anyOf
    }
    
    public static func == (lhs: JSONSchema, rhs: JSONSchema) -> Bool {
@@ -165,6 +168,7 @@ public class JSONSchema: Codable, Equatable {
       try container.encodeIfPresent(required, forKey: .required)
       try container.encodeIfPresent(additionalProperties, forKey: .additionalProperties)
       try container.encodeIfPresent(`enum`, forKey: .enum)
+      try container.encodeIfPresent(anyOf, forKey: .anyOf)
    }
    
    public required init(from decoder: Decoder) throws {
@@ -179,6 +183,7 @@ public class JSONSchema: Codable, Equatable {
          required = nil
          additionalProperties = false
          `enum` = nil
+         anyOf = nil
          return
       }
       
@@ -193,6 +198,6 @@ public class JSONSchema: Codable, Equatable {
    }
    
    private enum CodingKeys: String, CodingKey {
-      case type, description, properties, items, required, additionalProperties, `enum`, ref = "$ref"
+      case type, description, properties, items, required, additionalProperties, `enum`, anyOf, ref = "$ref"
    }
 }
